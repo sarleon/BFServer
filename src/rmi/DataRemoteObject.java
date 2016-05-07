@@ -3,21 +3,29 @@ package rmi;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
+import service.ExecuteService;
 import service.IOService;
+import service.TestService;
 import service.UserService;
+import serviceImpl.ExecuteServiceImpl;
 import serviceImpl.IOServiceImpl;
+import serviceImpl.TestServiceImpl;
 import serviceImpl.UserServiceImpl;
 
-public class DataRemoteObject extends UnicastRemoteObject implements IOService, UserService{
+public class DataRemoteObject extends UnicastRemoteObject implements IOService, UserService,TestService,ExecuteService{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 4029039744279087114L;
+	private ExecuteService executeService;
+	private TestService testService;
 	private IOService iOService;
 	private UserService userService;
 	protected DataRemoteObject() throws RemoteException {
 		iOService = new IOServiceImpl();
 		userService = new UserServiceImpl();
+		testService=new TestServiceImpl();
+		executeService=new ExecuteServiceImpl();
 	}
 
 	@Override
@@ -39,6 +47,11 @@ public class DataRemoteObject extends UnicastRemoteObject implements IOService, 
 	}
 
 	@Override
+	public boolean saveFileCopy(String filename, String userid) throws RemoteException {
+		return iOService.saveFileCopy(filename,userid);
+	}
+
+	@Override
 	public boolean login(String username, String password) throws RemoteException {
 		// TODO Auto-generated method stub
 		return userService.login(username, password);
@@ -50,4 +63,19 @@ public class DataRemoteObject extends UnicastRemoteObject implements IOService, 
 		return userService.logout(username);
 	}
 
+	@Override
+	public boolean isLogin(String username) throws RemoteException {
+		return userService.isLogin(username);
+	}
+
+	@Override
+	public String execute(String code, String param) throws RemoteException {
+
+		return executeService.execute(code,param);
+	}
+
+	@Override
+	public boolean echo() throws RemoteException{
+		return testService.echo();
+	}
 }

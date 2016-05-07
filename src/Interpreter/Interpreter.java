@@ -9,22 +9,31 @@ import java.util.Scanner;
 public class Interpreter {
     private char[] codes;
     private int pointer;
-
-
+    private char[] params;
+    private int paramPointer=0;
     private char[] memory;
-    public Interpreter(String code){
+    public Interpreter(String code,String param){
         this.codes=code.toCharArray();
-        pointer=0;
+        String[] paramStr=param.split(" ");
+        params=new char[paramStr.length];
+        try {
+
+            for (int i = 0; i < paramStr.length; i++) {
+                params[i]=paramStr[i].charAt(0);
+            }
+            pointer=0;
+
+        } catch (IndexOutOfBoundsException e){
+
+        }
         memory=new char[100];
 
     }
-
-  /*  public static void main(String[] args) throws IOException{
-        new Interpreter.Interpreter("++++++++++[>+++++++>++++++++++>+++>+<<<<-]\n" +
-                ">++.>+.+++++++..+++.>++.<<+++++++++++++++.\n" +
-                ">.+++.------.--------.>+.>.").interpret();
-    }*/
+    public static void main(String[] args) throws IOException{
+        System.out.println(new Interpreter(",>++++++[<-------->-],,[<+>-],<.>.","3 4").interpret());
+    }
     private void expandMemory(){
+
         int capacity=this.memory.length*2;
         char[] newmemory=new char[capacity];
         for (int i = 0; i < this.memory.length; i++) {
@@ -35,7 +44,10 @@ public class Interpreter {
     }
 
 
-    private void interpret() throws IOException {
+    public String  interpret() throws IOException {
+        StringBuilder stringBuilder=new StringBuilder();
+
+        String result=null;
         Scanner scanner=new Scanner(System.in);
 
         for (int i = 0; i <codes.length ; i++) {
@@ -49,8 +61,12 @@ public class Interpreter {
                     pointer++;
                     break;
                 case '<':pointer--;break;
-                case ',':memory[pointer]=(char)System.in.read();break;
-                case '.':System.out.print(memory[pointer]);break;
+                case ',':try {
+                    memory[pointer]=params[paramPointer++];
+                } catch (IndexOutOfBoundsException e){
+
+                }break;
+                case '.':stringBuilder.append(memory[pointer]);break;
                 case '[':if(i>=0&&i<codes.length){
                     if(memory[pointer]==0){
                         while (codes[i]!=']'){
@@ -71,6 +87,9 @@ public class Interpreter {
             }
 
         }
+        result=stringBuilder.toString();
+        System.out.println(result);
+        return result;
     }
 
 }
