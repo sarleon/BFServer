@@ -47,8 +47,18 @@ public class DataRemoteObject extends UnicastRemoteObject implements IOService, 
 	}
 
 	@Override
-	public boolean saveFileCopy(String filename, String userid) throws RemoteException {
-		return iOService.saveFileCopy(filename,userid);
+	public boolean saveFileCopy(String filename, String userid,String filetext) throws RemoteException {
+		return iOService.saveFileCopy(filename,userid,filetext);
+	}
+
+	@Override
+	public String readFileCopy(String username, String filename) throws RemoteException {
+		return iOService.readFileCopy(username,filename);
+	}
+
+	@Override
+	public String[] readFileCopyList(String username,String fileName) throws RemoteException {
+		return iOService.readFileCopyList(username,fileName);
 	}
 
 	@Override

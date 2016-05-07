@@ -2,6 +2,8 @@ package serviceImpl;
 
 import java.io.*;
 import java.rmi.RemoteException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import DB.DBTest;
 import service.IOService;
@@ -17,6 +19,7 @@ public class IOServiceImpl implements IOService{
 			fw.write(file);
 			fw.flush();
 			fw.close();
+			saveFileCopy(fileName,userId,file);
 			return true;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -55,8 +58,37 @@ public class IOServiceImpl implements IOService{
 	}
 
 	@Override
-	public boolean saveFileCopy(String filename, String userid) throws RemoteException {
-		return false;
+	public boolean saveFileCopy(String filename, String userid,String filetext) throws RemoteException {
+
+		if(!DBTest.findCopyAddress(filename,userid)){
+			DBTest.makeCopeDir(filename,userid);
+		}
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
+		String  time=df.format(new Date());
+		File f = new File("Code/"+userid +"/_"+filename+"/_"+filename+"_"+time);
+		try {
+			FileWriter fw = new FileWriter(f, false);
+			fw.write(filetext);
+			fw.flush();
+			fw.close();
+
+			return true;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+
+
+	}
+
+	@Override
+	public String readFileCopy(String username, String filename) throws RemoteException {
+		return null;
+	}
+
+	@Override
+	public String[] readFileCopyList(String username,String fileName) throws RemoteException {
+		return DBTest.getFileCopyList(username,fileName);
 	}
 
 }
