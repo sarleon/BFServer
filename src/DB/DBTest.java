@@ -1,6 +1,10 @@
 package DB;
 
+import service.IOService;
+import serviceImpl.IOServiceImpl;
+
 import java.io.*;
+import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,9 +20,16 @@ public class DBTest {
         user.setUsername("asd");
         user.setPassword("12345");
       //  System.out.println(UserDAO.login(user));
-        SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-        String  time=df.format(new Date());
-        System.out.println(findCopyAddress("test2","asd"));
+        IOService ioService=new IOServiceImpl();
+
+        try {
+            String[] strings=ioService.readFileCopyList("asd","qwe");
+            for (int i = 0; i < strings.length; i++) {
+                System.out.println(strings[i]);
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
     public static void mkdir(String string){
         Runtime runtime=Runtime.getRuntime();

@@ -83,7 +83,28 @@ public class IOServiceImpl implements IOService{
 
 	@Override
 	public String readFileCopy(String username, String filename) throws RemoteException {
-		return null;
+		String originalFileName=filename.split("_")[1];
+		File f = new File("Code/"+username +"/_"+originalFileName+"/"+filename);
+		StringBuilder sb=new StringBuilder();
+		String temp="";
+		String result="";
+		try {
+			FileReader fileReader=new FileReader(f);
+			BufferedReader bufferedReader=new BufferedReader(fileReader);
+			while ((temp=bufferedReader.readLine())!=null){
+				sb.append(temp);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		result=sb.toString();
+
+		return result;
+
 	}
 
 	@Override
