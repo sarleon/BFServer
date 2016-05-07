@@ -1,10 +1,9 @@
 package serviceImpl;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.rmi.RemoteException;
 
+import DB.DBTest;
 import service.IOService;
 
 public class IOServiceImpl implements IOService{
@@ -27,14 +26,32 @@ public class IOServiceImpl implements IOService{
 
 	@Override
 	public String readFile(String userId, String fileName) {
-		// TODO Auto-generated method stub
-		return "OK";
+		File f = new File("Code/"+userId +"/"+fileName);
+		StringBuilder sb=new StringBuilder();
+		String temp="";
+		String result="";
+		try {
+			FileReader fileReader=new FileReader(f);
+			BufferedReader bufferedReader=new BufferedReader(fileReader);
+			while ((temp=bufferedReader.readLine())!=null){
+				sb.append(temp);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		result=sb.toString();
+
+		return result;
 	}
 
 	@Override
-	public String readFileList(String userId) {
+	public String[] readFileList(String userId) {
 		// TODO Auto-generated method stub
-		return "OK";
+		return DBTest.getFileList(userId);
 	}
 
 	@Override

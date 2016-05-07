@@ -2,6 +2,7 @@ package DB;
 
 import java.io.*;
 import java.sql.Connection;
+import java.util.ArrayList;
 
 /**
  * Created by sarleon on 16-5-6.
@@ -13,6 +14,10 @@ public class DBTest {
         user.setPassword("12345");
         System.out.println(UserDAO.login(user));
         mkdir("asd");
+        String[] list=getFileList("asd");
+        for (int i = 0; i < list.length; i++) {
+            System.out.println(list[i]);
+        }
     }
     public static void mkdir(String string){
         Runtime runtime=Runtime.getRuntime();
@@ -47,5 +52,28 @@ public class DBTest {
             e.printStackTrace();
         }
         return  result;
+    }
+
+    public static String[] getFileList(String username){
+        Runtime runtime=Runtime.getRuntime();
+        ArrayList<String> stringArrayList=new ArrayList<String>();
+        String temp="";
+        Process process=null;
+        try {
+            process=runtime.exec("ls Code/"+username+"/");
+
+            BufferedReader bufferedReader=new BufferedReader(new InputStreamReader(process.getInputStream()));
+            while ((temp=bufferedReader.readLine())!=null){
+                stringArrayList.add(temp);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String[] result=new String[stringArrayList.size()];
+        for (int i = 0; i < stringArrayList.size(); i++) {
+            result[i]=stringArrayList.get(i);
+        }
+        return  result;
+
     }
 }
